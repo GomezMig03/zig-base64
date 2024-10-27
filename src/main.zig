@@ -1,4 +1,5 @@
 const std = @import("std");
+const stdout = std.io.getStdOut().writer();
 
 pub fn main() !void {}
 
@@ -23,14 +24,12 @@ const Base64 = struct {
             return 64;
         var index: u8 = 0;
 
-        while (index < 64) {}
         for (0..63) |i| {
-            if (self._char_at(i) == char) {
-                index = i;
+            if (self._char_at(@intCast(i)) == char) {
+                index = @intCast(i);
                 break;
             }
         }
-
         return index;
     }
 
@@ -109,8 +108,7 @@ const Base64 = struct {
 
 fn _cal_enc_len(input: []const u8) !usize {
     if (input.len < 3) {
-        const n_output: usize = 4;
-        return n_output;
+        return 4;
     }
     const n_output: usize = try std.math.divCeil(usize, input.len, 3);
     return n_output * 4;
@@ -118,9 +116,8 @@ fn _cal_enc_len(input: []const u8) !usize {
 
 fn _cal_dec_len(input: []const u8) !usize {
     if (input.len < 4) {
-        const n_output: usize = 3;
-        return n_output;
+        return 3;
     }
-    const n_output: usize = try std.math.divCeil(usize, input, 4);
+    const n_output: usize = try std.math.divCeil(usize, input.len, 4);
     return n_output * 3;
 }
